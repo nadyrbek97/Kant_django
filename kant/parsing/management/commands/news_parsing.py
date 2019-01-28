@@ -34,11 +34,13 @@ class Command(BaseCommand):
         if len(day) == 1:
             day = "0" + day
 
-        if datetime.datetime.today().weekday() != 5 and datetime.datetime.today().weekday() != 6:
+        try:
+            # datetime.datetime.today().weekday() != 5 and datetime.datetime.today().weekday() != 6:
             source = requests.get(f'http://rossahar.ru/news/{year}/{month}/{day}').text
             self.parse_news(source)
-        else:
-            raise CommandError
+            return self.stdout.write(self.style.SUCCESS('News parsed successfully'))
+        except AttributeError:
+            return self.stdout.write(self.style.ERROR('This is weekend or holiday'))
 
     @staticmethod
     def parse_news(source):
