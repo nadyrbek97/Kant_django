@@ -1,4 +1,5 @@
 from django.core.management import BaseCommand, CommandError
+from django.db.utils import DataError, IntegrityError
 
 from bs4 import BeautifulSoup
 import requests
@@ -41,6 +42,10 @@ class Command(BaseCommand):
             return self.stdout.write(self.style.SUCCESS('News parsed successfully'))
         except AttributeError:
             return self.stdout.write(self.style.ERROR('This is weekend or holiday'))
+        except DataError:
+            return self.stdout.write(self.style.ERROR('Article is too long'))
+        except IntegrityError:
+            return self.stdout.write(self.style.ERROR('Article already exist'))
 
     @staticmethod
     def parse_news(source):

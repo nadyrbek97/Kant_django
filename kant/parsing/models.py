@@ -43,7 +43,7 @@ class NewsModel(AbstractDateTimeModel):
     link = models.CharField("Ссылка на новость", max_length=50, null=True, unique=True, )
     data = models.CharField("Дата", max_length=20, null=True)
     name = models.CharField("Название", max_length=5000, null=True, )
-    description = models.CharField("Описание", max_length=5000, null=True, default="")
+    description = models.CharField("Описание", max_length=20000, null=True, default="")
 
     class Meta:
         verbose_name = "Новость Rossahar.ru"

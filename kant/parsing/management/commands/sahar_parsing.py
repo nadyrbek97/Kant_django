@@ -1,4 +1,5 @@
 from django.core.management import BaseCommand, CommandError
+from django.db.utils import IntegrityError
 
 from bs4 import BeautifulSoup
 import requests
@@ -6,6 +7,8 @@ import requests
 from parsing.models import (SugarModel,
                             NewsModel,
                             JomModel)
+
+from crontab import CronTab
 
 
 class Command(BaseCommand):
@@ -17,14 +20,17 @@ class Command(BaseCommand):
         source3 = requests.get('http://rossahar.ru/informs/jom_524.html?SimG=ufo').text
         source4 = requests.get('http://rossahar.ru/informs/jom_524.html?SimG=cfo').text
 
-        # self.parse_sugar_ufo(source1)
-        # self.stdout.write(self.style.SUCCESS('Successfully parsed Sugar UFO'))
-        self.parse_sugar_cfo(source2)
-        self.stdout.write(self.style.SUCCESS('Successfully parsed Sugar CFO'))
-        self.parse_jom_ufo(source3)
-        self.stdout.write(self.style.SUCCESS('Successfully parsed JOM UFO'))
-        self.parse_jom_cfo(source4)
-        self.stdout.write(self.style.SUCCESS('Successfully parsed JOM CFO'))
+        try:
+            self.parse_sugar_ufo(source1)
+            self.stdout.write(self.style.SUCCESS('Successfully parsed Sugar UFO'))
+            self.parse_sugar_cfo(source2)
+            self.stdout.write(self.style.SUCCESS('Successfully parsed Sugar CFO'))
+            self.parse_jom_ufo(source3)
+            self.stdout.write(self.style.SUCCESS('Successfully parsed JOM UFO'))
+            self.parse_jom_cfo(source4)
+            self.stdout.write(self.style.SUCCESS('Successfully parsed JOM CFO'))
+        except IntegrityError:
+            self.stdout.write(self.style.ERROR('This data already parsed'))
 
     @staticmethod
     def parse_sugar_ufo(source):
