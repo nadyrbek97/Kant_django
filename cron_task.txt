@@ -1,5 +1,5 @@
 #Cron scheduler for Cron Weather and Scrapy Tasks
 SHELL=/bin/bash
-0 17 * * * cd ~/Kant_django && source venv/bin/activate && ./parsing.sh > ~/cron_kndk.log
-0 * * * * cd ~/Kant_django && source bin/activate && ./link.sh > ~/cron_weather.log
-0 * * * * cd ~/Kant_django && source bin/activate && ./link_currency_fetch.sh > ~/cron_currency.log
+* * * * * /home/nadyrbek/PycharmProjects/Kant_django/venv/bin/python /home/nadyrbek/PycharmProjects/Kant_django/kant && ./mig.sh > /home/nadyrbek/PycharmProjects/Kant_django/kant/cron_log.log
+# 0 * * * * cd ~/Kant_django && source bin/activate && ./link.sh > ~/cron_weather.log
+# 0 * * * * cd ~/Kant_django && source bin/activate && ./link_currency_fetch.sh > ~/cron_currency.log
