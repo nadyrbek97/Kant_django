@@ -4,7 +4,7 @@ from .models import (FieldsModel,
                      FieldExpenses,
                      SugarBeetPointModel,
                      Expenses,
-                     CommodityModel,)
+                     CoordinatesModel)
 
 
 class FieldsModelSerializer(serializers.ModelSerializer):
@@ -33,3 +33,11 @@ class SugarBeetPointSerializer(serializers.ModelSerializer):
     class Meta:
         model = SugarBeetPointModel
         fields = ('id', 'name')
+
+
+class CoordinateModelSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CoordinatesModel
+        fields = ('longitude', 'latitude', 'number')
+

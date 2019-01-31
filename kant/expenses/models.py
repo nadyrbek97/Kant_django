@@ -78,3 +78,18 @@ class FieldExpenses(AbstractExpensesModel):
         return self.name
 
 
+class CoordinatesModel(models.Model):
+    field = models.ForeignKey(FieldsModel, on_delete=models.CASCADE, verbose_name='Поле')
+    longitude = models.CharField(max_length=30, null=False, blank=False, verbose_name='Долгота')
+    latitude = models.FloatField(max_length=30, null=False, blank=False, verbose_name='Широта')
+    number = models.IntegerField(verbose_name='Номер порядка')
+
+    class Meta:
+        verbose_name = 'Коодинаты поля'
+        verbose_name_plural = 'Координаты полей'
+
+    def __str__(self):
+        return str(self.field.year) + " " + str(self.number)
+
+
+
