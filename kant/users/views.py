@@ -14,6 +14,7 @@ from rest_framework import exceptions
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
+from rest_framework import permissions
 
 from django.contrib.auth.models import User
 from django.contrib.auth import login as django_login, logout as django_logout
@@ -58,6 +59,7 @@ class UserSignUpView(generics.CreateAPIView):
 
 
 class UserLoginView(APIView):
+    permission_classes = (permissions.AllowAny, )
 
     def post(self, request):
         try:

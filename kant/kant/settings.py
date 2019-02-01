@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import datetime
 from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -114,16 +115,23 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
 
-    # 'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',
-    #                                'rest_framework.permissions.AllowAny',),
-    #
-    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',
+                                   'rest_framework.permissions.AllowAny',),
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
     #     'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     #     'rest_framework.authentication.SessionAuthentication',
     #     'rest_framework.authentication.BasicAuthentication',
-    #     'rest_framework.authentication.TokenAuthentication',),
+          'rest_framework.authentication.TokenAuthentication',
+    ),
 }
 
+JWT_AUTH = {
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=365),
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(minutes=10),
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
