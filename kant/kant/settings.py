@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'parsing',
     'users',
     'expenses',
+    'services',
     'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
