@@ -54,7 +54,7 @@ class Services(models.Model):
     logo = models.CharField("Лого сервиса", max_length=500, null=True, blank=True)
 
     class Meta:
-        verbose_name = "Услугу"
+        verbose_name = "Услуга"
         verbose_name_plural = "Услуги"
 
     def __str__(self):

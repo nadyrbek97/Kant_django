@@ -32,6 +32,8 @@ class ExpensesView(APIView):
         # language_activate
         # print(kwargs)
         field_id = self.kwargs.get('field_id')
+        print(field_id)
+
         if field_id is not None:
             field_expense = FieldExpenses.objects.filter(field_id=field_id)
             if len(field_expense) > 0:
