@@ -175,3 +175,32 @@ class SuppliersView(APIView):
         except:
             return Response({"error": "Internal error."},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class TechnologyView(APIView):
+    permission_classes = (permissions.AllowAny, )
+
+    def get(self, request, *args, **kwargs):
+        technologies = TechnologyModel.objects.all()
+        technologies_serializer = TechnologySerializer(technologies, many=True)
+
+        try:
+            if len(technologies_serializer.data) > 0:
+                return Response(technologies_serializer.data, status=status.HTTP_200_OK)
+            return Response({"error": "No technology found"}, status=status.HTTP_404_NOT_FOUND)
+        except:
+            return Response({"error": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ContractsView(APIView):
+    permission_classes = (permissions.AllowAny, )
+
+    def get(self, request, *args, **kwargs):
+        contracts = ContractsModel.objects.all()
+        contracts_serializer = ContractSerializer(contracts, many=True)
+        try:
+            if len(contracts_serializer.data) > 0:
+                return Response(contracts_serializer.data, status=status.HTTP_200_OK)
+            return Response({"error": "No contracts found"}, status=status.HTTP_404_NOT_FOUND)
+        except:
+            return Response({"error": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

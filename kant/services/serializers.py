@@ -78,3 +78,19 @@ class SupplierImagesModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = SupplierImagesModel
         fields = ('id', 'image',)
+
+
+class TechnologySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TechnologyModel
+        fields = ('id', 'name', 'text')
+
+
+class ContractSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ContractsModel
+        fields = ('id', 'title', 'text')
+
+

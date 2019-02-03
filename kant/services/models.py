@@ -165,3 +165,28 @@ class SupplierImagesModel(AbstractCompanyImagesModel):
 
     def __str__(self):
         return "{} {}".format(self.supplier_type.name, self.image)
+
+
+class TechnologyModel(models.Model):
+    name = models.CharField(max_length=1000, null=True, blank=True)
+    text = models.TextField("Данные Технологий", null=True)
+
+    class Meta:
+        verbose_name = "Технлогия"
+        verbose_name_plural = "Технологии"
+
+    def __str__(self):
+        return self.name
+
+
+class ContractsModel(models.Model):
+    title = models.CharField(max_length=1000, null=True, blank=True,
+                             default='', verbose_name='Название')
+    text = models.TextField(verbose_name="Текст")
+
+    class Meta:
+        verbose_name = 'Контракт/Договор'
+        verbose_name_plural = 'Контракты/Договора'
+
+    def __str__(self):
+        return self.title

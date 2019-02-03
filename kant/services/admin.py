@@ -8,7 +8,9 @@ from .models import (Services,
                      SupplierBranchModel,
                      SupplierContactsModel,
                      SupplierImagesModel,
-                     SupplierTypeModel)
+                     SupplierTypeModel,
+                     TechnologyModel,
+                     ContractsModel)
 
 admin.site.register(Services)
 admin.site.register(BankModel)
@@ -20,3 +22,5 @@ admin.site.register(SupplierBranchModel)
 admin.site.register(SupplierImagesModel)
 admin.site.register(SupplierContactsModel)
 admin.site.register(SupplierTypeModel)
+admin.site.register(TechnologyModel)
+admin.site.register(ContractsModel)
