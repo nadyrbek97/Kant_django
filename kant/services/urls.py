@@ -6,7 +6,8 @@ from .views import (BankView,
                     ServiceDataView,
                     SuppliersView,
                     TechnologyView,
-                    ContractsView)
+                    ContractsView,
+                    MainMenuView)
 
 app_name = "services"
 
@@ -18,6 +19,7 @@ urlpatterns = [
     path('suppliers/', SuppliersView.as_view(), name='suppliers-view'),
     path('technology/', TechnologyView.as_view(), name='technology-view'),
     path('contracts/',  ContractsView.as_view(), name='contracts-view'),
+    path('menu/', MainMenuView.as_view(), name='menu-view'),
 
     # path('fin-office/<int:bank_id>/', BankView.as_view(), name='bank-view'),
 ]

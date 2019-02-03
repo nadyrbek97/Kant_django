@@ -204,3 +204,94 @@ class ContractsView(APIView):
             return Response({"error": "No contracts found"}, status=status.HTTP_404_NOT_FOUND)
         except:
             return Response({"error": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class MainMenuView(APIView):
+    permission_classes = (permissions.AllowAny, )
+
+    def get(self, request, *args, **kwargs):
+
+        # financial-offices
+        try:
+            result = {}
+            result['financial-offices'] = {}
+
+            try:
+                services = Services.objects.filter(pk=2)
+                services_serializer = ServicesSerializer(services, many=True)
+
+                for data in services_serializer.data:
+                    banks_result = []
+                    banks = BankModel.objects.filter(service_id=data['id'])
+
+                    result['financial-offices']['logo'] = data['logo']
+
+                    for bank in banks:
+                        bank_result = {}
+
+                        bank_serializer = BankModelSerializer(bank, many=False)
+
+                        bank_result['id'] = bank_serializer.data['id']
+                        bank_result['title'] = bank_serializer.data['name']
+                        bank_result['logo'] = bank_serializer.data['logo']
+                        bank_result['description'] = bank_serializer.data['description']
+
+                        branches = BankBranchModel.objects.filter(bank=bank)
+                        branches_serializer = BankBranchModelSerializer(branches, many=True)
+                        bank_result['branches'] = branches_serializer.data
+
+                        contacts = BankContactsModel.objects.all().filter(bank=bank)
+                        contacts_serializer = BankContactsModelSerializer(contacts, many=True)
+                        bank_result['contacts'] = contacts_serializer.data
+
+                        images = BankImagesModel.objects.all().filter(bank=bank)
+                        images_serializer = BankImagesModelSerializer(images, many=True)
+                        bank_result['images'] = images_serializer.data
+                        banks_result.append(bank_result)
+                    result['financial-offices']['data'] = banks_result
+            except:
+                pass
+
+            # Production
+            result['production'] = {}
+            try:
+                suppliers = Suppliers.objects.filter(pk=1)
+                suppliers_serializer = SuppliersModelSerializer(suppliers, many=True)
+                for data in suppliers_serializer.data:
+                    suppliers_result = []
+                    supplier_type = SupplierTypeModel.objects.filter(suppliers_id=data['id'])
+                    for s in supplier_type:
+                        s_result = {}
+                        s_serializer = SupplierTypeModelSerializer(s, many=False)
+                        s_result['id'] = s_serializer.data['id']
+                        s_result['title'] = s_serializer.data['name']
+                        s_result['logo'] = s_serializer.data['logo']
+                        s_result['description'] = s_serializer.data['description']
+
+                        branches = SupplierBranchModel.objects.filter(supplier_type=s)
+                        branches_serializer = SupplierBranchModelSerializer(branches, many=True)
+                        s_result['branches'] = branches_serializer.data
+
+                        contacts = SupplierContactsModel.objects.filter(supplier_type=s)
+                        contacts_serializer = SupplierContactsModelSerializer(contacts, many=True)
+                        s_result['contacts'] = contacts_serializer.data
+
+                        images = SupplierImagesModel.objects.filter(supplier_type=s)
+                        images_serializer = SupplierImagesModelSerializer(images, many=True)
+                        s_result['images'] = images_serializer.data
+                        suppliers_result.append(s_result)
+                    result['production']['logo'] = data['logo']
+                    print(suppliers_result)
+                    result['production']['data'] = suppliers_result
+            except:
+                pass
+
+            technology = TechnologyModel.objects.all()
+            technology_serializer = TechnologySerializer(technology, many=True)
+            result['technologies'] = technology_serializer.data
+
+            return Response(result, status=status.HTTP_200_OK)
+        except:
+            return Response({"error": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
