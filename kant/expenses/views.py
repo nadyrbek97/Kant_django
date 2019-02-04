@@ -25,7 +25,7 @@ from rest_framework.response import Response
 
 
 class ExpensesView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         # language = request.META.get('HTTP_LANGUAGE')
@@ -99,7 +99,7 @@ class ExpensesView(APIView):
 
 
 class FieldsView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         # language = request.META.get('HTTP_LANGUAGE')
@@ -246,7 +246,7 @@ class FieldsView(APIView):
 
 
 class SugarBeetPointView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         try:

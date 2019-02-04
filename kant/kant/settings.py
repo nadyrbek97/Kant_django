@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'expenses',
     'services',
     'modeltranslation',
+    'fcm_django',
+    'push_notifications',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -113,6 +115,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+FCM_DJANGO_SETTINGS = {
+        "FCM_SERVER_KEY": config('FCM_API_KEY')
+}
+
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
 
@@ -120,10 +126,10 @@ REST_FRAMEWORK = {
                                    'rest_framework.permissions.AllowAny',),
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
-    #     'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-    #     'rest_framework.authentication.SessionAuthentication',
-    #     'rest_framework.authentication.BasicAuthentication',
-          'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ),
 }
 
@@ -134,8 +140,17 @@ JWT_AUTH = {
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(minutes=10),
 }
 
+# AUTH_USER_MODEL = 'users.UserProfile'
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
+LANGUAGES = (
+    ('ru', 'Russian'),
+    ('kg', 'Kyrgyz'),
+)
+MODELTRANSLATION_LANGUAGES = ('ru', 'kg')
+MODELTRANSLATION_FALLBACK_LANGUAGES = ('ru', 'kg')
+MODELTRANSLATION_AUTO_POPULATE = True
 
 LANGUAGE_CODE = 'en-us'
 

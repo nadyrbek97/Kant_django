@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from push_notifications.models import APNSDevice, GCMDevice
+from fcm_django.models import FCMDevice
 
 from rest_framework.views import APIView
 from rest_framework import permissions, status
@@ -8,8 +9,15 @@ from .serializers import *
 from .models import *
 
 
+device = FCMDevice.objects.all().first()
+# device.send_message
+# device.send_data_message("Title", "Message")
+# device.send_message(data={"testing": "testing"})
+# device.send_message(title="Title", body="Message body", icon=..., data={"testing": "testing"})
+
+
 class BankView(APIView):
-    permission_classes = (permissions.AllowAny, )
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
 
@@ -57,7 +65,7 @@ class BankView(APIView):
 
 
 class ServiceDataView(APIView):
-    permission_classes = (permissions.AllowAny, )
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         service_id = self.kwargs.get('data_id')
@@ -69,7 +77,7 @@ class ServiceDataView(APIView):
 
 
 class ServicesView(APIView):
-    permission_classes = (permissions.AllowAny, )
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         service_id = self.kwargs.get('service_id')
@@ -122,7 +130,7 @@ class ServicesView(APIView):
 
 
 class SuppliersView(APIView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         # language = request.META.get('HTTP_LANGUAGE')
@@ -178,7 +186,7 @@ class SuppliersView(APIView):
 
 
 class TechnologyView(APIView):
-    permission_classes = (permissions.AllowAny, )
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         technologies = TechnologyModel.objects.all()
@@ -193,7 +201,7 @@ class TechnologyView(APIView):
 
 
 class ContractsView(APIView):
-    permission_classes = (permissions.AllowAny, )
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         contracts = ContractsModel.objects.all()
@@ -207,7 +215,7 @@ class ContractsView(APIView):
 
 
 class MainMenuView(APIView):
-    permission_classes = (permissions.AllowAny, )
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
 

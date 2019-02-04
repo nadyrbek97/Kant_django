@@ -9,6 +9,14 @@ class AbstractDateTimeModel(models.Model):
         abstract = True
 
 
+class WeatherModel(models.Model):
+    pass
+
+
+class CurrencyModel():
+    pass
+
+
 class SugarModel(models.Model):
     name = models.CharField("Название", max_length=10)
     date = models.CharField("Дата", max_length=20)
