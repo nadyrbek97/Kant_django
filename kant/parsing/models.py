@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import JSONField
 
 
 class AbstractDateTimeModel(models.Model):
@@ -10,11 +11,11 @@ class AbstractDateTimeModel(models.Model):
 
 
 class WeatherModel(models.Model):
-    pass
+    data = JSONField()
 
 
-class CurrencyModel():
-    pass
+class CurrencyModel(AbstractDateTimeModel):
+    data = JSONField()
 
 
 class SugarModel(models.Model):

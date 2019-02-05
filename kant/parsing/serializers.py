@@ -3,8 +3,16 @@ from rest_framework import serializers
 from .models import (
     NewsModel,
     SugarModel,
-    JomModel
+    JomModel,
+    WeatherModel
 )
+
+
+class WeatherModelSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = WeatherModel
+        fields = ('data',)
 
 
 class SugarSerializer(serializers.ModelSerializer):
