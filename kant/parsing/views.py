@@ -3,6 +3,7 @@ from .serializers import *
 from urllib.request import Request, urlopen
 
 import json
+import ssl
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -13,6 +14,51 @@ from .models import WeatherModel
 from .methods import (accuweather_five_day_result_process,
                       accuweather_one_day_result_process,
                       )
+
+
+class CurrencyFetchView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request, *args, **kwargs):
+        try:
+            try:
+                _create_unverified_https_context = ssl._create_unverified_context
+            except AttributeError:
+                # Legacy Python that doesn't verify HTTPS certificates by default
+                pass
+            else:
+                # Handle target environment that doesn't support HTTPS verification
+                ssl._create_default_https_context = _create_unverified_https_context
+            req = Request('https://valuta.kg/api/rate/average.json')
+            response_body = urlopen(req)
+            data = response_body.read()
+            encoding = response_body.info().get_content_charset('utf-8')
+            result = json.loads(data.decode(encoding))
+            if len(result) > 0:
+                CurrencyModel.objects.all().delete()
+                currency = CurrencyModel(data=result)
+                currency.save()
+                return Response({"success": "Success processing."},
+                                status=status.HTTP_200_OK)
+            return Response({"error": "Error occurred while processing."},
+                            status=status.HTTP_501_NOT_IMPLEMENTED)
+        except:
+            return Response({"error": "Error while processing."},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class CurrencyView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request, *args, **kwargs):
+        try:
+            currency = CurrencyModel.objects.all()
+            currency_serializer = CurrencyModelSerializer(currency, many=True, )
+            result = {"data": currency_serializer.data[0]['data']['data']}
+            return Response(result, status=status.HTTP_200_OK)
+        except:
+            return Response({"error": "Error while processing."},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class WeatherFetchView(APIView):

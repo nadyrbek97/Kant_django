@@ -5,7 +5,10 @@ from .views import (ScrapedSugarAndJomView,
                     NewsView,
                     WeatherFetchView,
                     AccuWeatherFetchView,
-                    WeatherView)
+                    WeatherView,
+                    CurrencyView,
+                    CurrencyFetchView,
+                    )
 
 app_name = "parsing"
 
@@ -15,5 +18,7 @@ urlpatterns = [
     path('fetch-weather/', WeatherFetchView.as_view(), name='fetch-weather-view'),
     path('weather/', WeatherView.as_view(), name='weather-view'),
     path('accu/', AccuWeatherFetchView.as_view(), name='accu-weather'),
+    path('fetch-currency/', CurrencyFetchView.as_view(), name='fetch-currency-view'),
+    path('currency/', CurrencyView.as_view(), name='currency-view'),
 
 ]

@@ -4,8 +4,16 @@ from .models import (
     NewsModel,
     SugarModel,
     JomModel,
-    WeatherModel
+    WeatherModel,
+    CurrencyModel
 )
+
+
+class CurrencyModelSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CurrencyModel
+        fields = ('data', )
 
 
 class WeatherModelSerializer(serializers.ModelSerializer):
