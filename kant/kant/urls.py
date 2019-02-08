@@ -14,10 +14,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf.urls import url
 from django.urls import path, include
 from rest_framework_jwt.views import (obtain_jwt_token,
                                       verify_jwt_token,
                                       refresh_jwt_token)
+from users.views import (SendFirebase,
+                         SendFirebaseMessageView,
+                         RegisterUserFirebaseTokenView,
+                         )
+from rest_framework.routers import DefaultRouter
+from fcm_django.api.rest_framework import FCMDeviceViewSet, FCMDeviceAuthorizedViewSet
+
+router = DefaultRouter()
+router.register(r'devices', FCMDeviceViewSet)
+router.register(r'register', FCMDeviceAuthorizedViewSet)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,5 +40,6 @@ urlpatterns = [
     path('api/', include('parsing.urls')),
     path('api/', include('expenses.urls')),
     path('api/', include('services.urls')),
-
+    path('firebase/', include(router.urls)),
+    url(regex='^user/register-token/(?P<user_id>[0-9]+)', view=include(router.urls))
 ]

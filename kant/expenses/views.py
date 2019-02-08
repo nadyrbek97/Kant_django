@@ -32,7 +32,7 @@ class ExpensesView(APIView):
         # language_activate
         # print(kwargs)
         field_id = self.kwargs.get('field_id')
-        print(field_id)
+        # print(field_id)
 
         if field_id is not None:
             field_expense = FieldExpenses.objects.filter(field_id=field_id)
@@ -119,15 +119,15 @@ class FieldsView(APIView):
                 year_data = {}
                 while len(fields) > 0:
                     json_data = FieldsModelSerializer(field_data, many=True)
-                    print(json_data)
+                    # print(json_data)
                     year_data['year'] = year
                     year_data['data'] = []
 
                     for item in json_data.data:
                         coord = CoordinatesModel.objects.filter(field_id=item['id'])
                         coord_data = CoordinateModelSerializer(coord, many=True, )
-                        print('===========')
-                        print(coord_data)
+                        # print('===========')
+                        # print(coord_data)
                         field_expenses = FieldExpenses.objects.filter(field_id=item['id'])
                         field_expenses_serializer = FieldExpensesSerializer(field_expenses, many=True, )
                         field['id'] = item['id']

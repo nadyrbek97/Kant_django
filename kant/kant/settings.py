@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'services',
     'modeltranslation',
     'fcm_django',
+    'fcm',
     'push_notifications',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -116,7 +117,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 FCM_DJANGO_SETTINGS = {
-        "FCM_SERVER_KEY": config('FCM_API_KEY')
+        "FCM_SERVER_KEY": config('FCM_API_KEY'),
+        "ONE_DEVICE_PER_USER": True,
+        "DELETE_INACTIVE_DEVICES": True,
 }
 
 REST_FRAMEWORK = {
@@ -127,7 +130,7 @@ REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
@@ -140,7 +143,27 @@ JWT_AUTH = {
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(minutes=10),
 }
 
-# AUTH_USER_MODEL = 'users.UserProfile'
+# AUTH_USER_MODEL = 'main.User'
+
+# PUSH_NOTIFICATIONS_SETTINGS = {
+#     'FCM_API_KEY': config('FCM_API'),
+#     'GCM_API_KEY': config('FCM_API'),
+#     'FCM_ERROR_TIMEOUT': 2419200,
+#     'FCM_POST_URL': 'https://fcm.googleapis.com/fcm/send'
+# }
+#
+# FCM_APIKEY = config('FCM_API')
+# FCM_MAX_RECIPIENTS = 100
+# FCM_DJANGO_SETTINGS = {
+#     "FCM_SERVER_KEY": config("FCM_API"),
+#     # true if you want to have only one active device per registered user at a time
+#     # default: False
+#     "ONE_DEVICE_PER_USER": True,
+#     # devices to which notifications cannot be sent,
+#     # are deleted upon receiving error response from FCM
+#     # default: False
+#     "DELETE_INACTIVE_DEVICES": False,
+# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
