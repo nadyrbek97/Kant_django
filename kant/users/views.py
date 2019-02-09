@@ -28,7 +28,7 @@ from django.contrib.auth import login as django_login, logout as django_logout, 
 from rest_framework.permissions import IsAuthenticated
 
 from fcm.utils import get_device_model
-from push_notifications.models import APNSDevice, GCMDevice
+# from push_notifications.models import APNSDevice, GCMDevice
 from django.conf import settings
 from decouple import config
 import requests

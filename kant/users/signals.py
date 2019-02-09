@@ -12,4 +12,4 @@ def send_fcm_notification(sender, instance, **kwargs):
     body = instance.content + "\n" + instance.description
     devices.send_message(title=instance.name, body=body, sound='Default')
     print("sending message ... ")
-    # return
+    return

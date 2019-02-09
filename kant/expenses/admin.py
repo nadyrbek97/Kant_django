@@ -6,7 +6,7 @@ from .models import (Expenses,
                      FieldExpenses,
                      )
 
-admin.site.register(Expenses)
-admin.site.register(FieldsModel)
-admin.site.register(SugarBeetPointModel)
-admin.site.register(FieldExpenses)
+# admin.site.register(Expenses)
+# admin.site.register(FieldsModel)
+# admin.site.register(SugarBeetPointModel)
+# admin.site.register(FieldExpenses)

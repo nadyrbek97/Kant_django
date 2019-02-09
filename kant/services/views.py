@@ -1,4 +1,4 @@
-from push_notifications.models import APNSDevice, GCMDevice
+# from push_notifications.models import APNSDevice, GCMDevice
 from fcm_django.models import FCMDevice
 
 from rest_framework.views import APIView
@@ -9,7 +9,7 @@ from .serializers import *
 from .models import *
 
 
-device = FCMDevice.objects.all().first()
+# device = FCMDevice.objects.all().first()
 # device.send_message
 # device.send_data_message("Title", "Message")
 # device.send_message(data={"testing": "testing"})

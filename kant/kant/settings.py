@@ -41,8 +41,8 @@ INSTALLED_APPS = [
     'services',
     'modeltranslation',
     'fcm_django',
-    'fcm',
-    'push_notifications',
+    # 'fcm',
+    # 'push_notifications',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -175,18 +175,20 @@ MODELTRANSLATION_LANGUAGES = ('ru', 'kg')
 MODELTRANSLATION_FALLBACK_LANGUAGES = ('ru', 'kg')
 MODELTRANSLATION_AUTO_POPULATE = True
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-Ru'
+# LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Bishkek'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+# USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
