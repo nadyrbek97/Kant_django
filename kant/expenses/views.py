@@ -17,6 +17,7 @@ from .serializers import (ExpensesSerializer,
                           CoordinateModelSerializer
                           )
 
+from parsing.methods import language_activate
 from rest_framework.views import APIView
 from rest_framework import authentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -28,8 +29,8 @@ class ExpensesView(APIView):
     permission_classes = (IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
-        # language = request.META.get('HTTP_LANGUAGE')
-        # language_activate
+        language = request.META.get('HTTP_LANGUAGE')
+        language_activate(request, language)
         # print(kwargs)
         field_id = self.kwargs.get('field_id')
         # print(field_id)
@@ -102,8 +103,8 @@ class FieldsView(APIView):
     permission_classes = (IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
-        # language = request.META.get('HTTP_LANGUAGE')
-        # language_activate(request, language)
+        language = request.META.get('HTTP_LANGUAGE')
+        language_activate(request, language)
         try:
             user_id = self.kwargs.get('user_id')
             # print(user_id)

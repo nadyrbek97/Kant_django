@@ -5,7 +5,6 @@ from .views import (UserSignUpView,
                     UserLogoutView,
                     UserChangePasswordView,
                     GetUserByIdView,
-                    RegisterUserFirebaseTokenView,
                     DomesticNewsView)
 
 

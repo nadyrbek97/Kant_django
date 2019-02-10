@@ -1,22 +1,27 @@
 from django.contrib import admin
 from .models import UserProfile, DomesticNewsModel, DomesticNewsPhotoLink
+from django.contrib.auth.models import Group
 
-
-app_name = "Пользователи"
 # admin.site.register(UserProfile)
-admin.site.register(DomesticNewsModel)
-admin.site.register(DomesticNewsPhotoLink)
+# admin.site.unregister(Group)
+# admin.site.register(DomesticNewsModel)
+# admin.site.register(DomesticNewsPhotoLink)
 
 
-# class DomesticNewsPhotoInline(admin.StackedInline):
-#     model = DomesticNewsPhotoLink
-#     extra = 0
-#
-#
-# @admin.register(DomesticNewsModel)
-# class DomesticAdmin(admin.ModelAdmin):
-#     exclude = ('name', 'description', 'content',)
-#     inlines = [DomesticNewsPhotoInline, ]
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('first_name', 'last_name', 'phone', 'email', 'city',)
+
+
+class DomesticNewsPhotoInline(admin.StackedInline):
+    model = DomesticNewsPhotoLink
+    extra = 0
+
+
+@admin.register(DomesticNewsModel)
+class DomesticAdmin(admin.ModelAdmin):
+    # exclude = ('name', 'description', 'content',)
+    inlines = [DomesticNewsPhotoInline, ]
 
 
 admin.site.site_header = "Кант кызылча"

@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from .serializers import *
 from .models import *
-
+from parsing.methods import language_activate
 
 # device = FCMDevice.objects.all().first()
 # device.send_message
@@ -133,8 +133,8 @@ class SuppliersView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        # language = request.META.get('HTTP_LANGUAGE')
-        # language_activate(request, language)
+        language = request.META.get('HTTP_LANGUAGE')
+        language_activate(request, language)
         try:
             supplier_id = self.kwargs.get('supplier_id')
             if supplier_id:

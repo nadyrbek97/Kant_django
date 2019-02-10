@@ -13,25 +13,18 @@ from .serializers import (UserSignUpSerializer,
 
 from rest_framework import generics, status
 from rest_framework.response import Response
-from rest_framework import exceptions
 from rest_framework.views import APIView
-from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import permissions
 from rest_framework.validators import ValidationError
 
 from django.contrib.auth.models import User
 from django.contrib.auth import login as django_login, logout as django_logout, authenticate as django_authenticate
-# from django.http import HttpResponse, response
 
-# from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from fcm.utils import get_device_model
-# from push_notifications.models import APNSDevice, GCMDevice
-from django.conf import settings
-from decouple import config
-import requests
+from parsing.methods import language_activate
+
 import json, traceback
 
 
@@ -51,7 +44,7 @@ class UserSignUpView(APIView):
                 if request.data['password'] != request.data['password_repeat']:
                     return Response({"error": "Passwords do not match."}, status=status.HTTP_400_BAD_REQUEST)
                 user = serializer.save()
-                print(user)
+                # print(user)
 
                 try:
                     user_profile = UserProfile.objects.create(user=user)
@@ -74,7 +67,7 @@ class UserSignUpView(APIView):
 
                     user_profile.firebase_token = ""
                     user_profile.save()
-                    print(user_profile)
+                    # print(user_profile)
 
                     dat = json.dumps({
                         "username": request.data['phone'],
@@ -105,10 +98,10 @@ class UserSignUpView(APIView):
                 except KeyError:
                     user.delete()
                     return Response({"error": KeyError}, status=status.HTTP_400_BAD_REQUEST)
-                # except:
-                #     user.delete()
-                    # traceback.print_stack()
-                    # return Response({"error": "Uncaught error occured."}, status=status.HTTP_400_BAD_REQUEST)
+                except:
+                    user.delete()
+                    traceback.print_stack()
+                    return Response({"error": "Uncaught error occured."}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except KeyError:
@@ -229,8 +222,8 @@ class UserChangePasswordView(generics.UpdateAPIView):
         return obj
 
     def update(self, request, *args, **kwargs):
-        # language = request.META.get('HTTP_LANGUAGE')
-        # language_activate(request, language)
+        language = request.META.get('HTTP_LANGUAGE')
+        language_activate(request, language)
         self.object = self.get_object()
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
@@ -359,85 +352,85 @@ class GetUserByIdView(APIView):
             return Response({"error": "Uncaught internal sever error"},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-class SendFirebaseMessageView(APIView):
-    permission_classes = (permissions.AllowAny,)
-
-    def get(self, request, *args, **kwargs):
-        # Device = get_device_model()
-        # print(GCMDevice.objects.all())
-        devices = GCMDevice.objects.all()
-        # Device.objects.all().send_message({'message': 'my test message'})
-        print(devices.send_message(
-            "This is a message",
-            extra={
-                "notification": {
-                    "title": "Notification title",
-                    "body": ""
-                },
-                "content_available": True,
-                "priority": "high",
-            }))
-        # my_phone = Device.objects.all()
-        # my_phone.send_message({'message': 'my test message'}, collapse_key='something')
-        return Response([], status=status.HTTP_200_OK)
-
-
-class SendFirebase(APIView):
-    permission_classes = (permissions.AllowAny,)
-
-    def get(self, request, *args, **kwargs):
-        tokens = UserProfile.objects.values_list('firebase_token')
-        print(tokens[0])
-        params = {}
-        params['title'] = "Manchester United - Liverpool"
-        params['body'] = "0 : 7"
-        params['sound'] = "default"
-
-        values = {
-            'content-available': True,
-            'PATCHpriority': 'high',
-            # 'to': '/topics/domestic_news',
-            "registration_ids": [item[0] for item in tokens],
-            'notification': params
-        }
-
-        headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'key=' + config('FCM_API')
-        }
-        print(headers['Authorization'])
-
-        return Response(
-            requests.post(url="https://fcm.googleapis.com/fcm/send", data=json.dumps(values), headers=headers),
-            status=status.HTTP_200_OK)
+#
+# class SendFirebaseMessageView(APIView):
+#     permission_classes = (permissions.AllowAny,)
+#
+#     def get(self, request, *args, **kwargs):
+#         # Device = get_device_model()
+#         # print(GCMDevice.objects.all())
+#         devices = GCMDevice.objects.all()
+#         # Device.objects.all().send_message({'message': 'my test message'})
+#         print(devices.send_message(
+#             "This is a message",
+#             extra={
+#                 "notification": {
+#                     "title": "Notification title",
+#                     "body": ""
+#                 },
+#                 "content_available": True,
+#                 "priority": "high",
+#             }))
+#         # my_phone = Device.objects.all()
+#         # my_phone.send_message({'message': 'my test message'}, collapse_key='something')
+#         return Response([], status=status.HTTP_200_OK)
 
 
-class RegisterUserFirebaseTokenView(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def patch(self, request, *args, **kwargs):
-        try:
-            user_id = self.kwargs.get('user_id')
-            user = UserProfile.objects.get(user_id=user_id)
-            user_serializer = UserTokenSerializer(user,
-                                                  data=request.data)
-            print(user_serializer)
-            if user_serializer.is_valid():
-                user_serializer.save()
-                return Response({"User token successfully changed or added."},
-                                status=status.HTTP_200_OK)
-            return Response({"error": "Bad Request Data"},
-                            status=status.HTTP_400_BAD_REQUEST)
-        except UserProfile.DoesNotExist:
-            return Response({"error": "User with given ID not found."},
-                            status=status.HTTP_404_NOT_FOUND)
-        except KeyError:
-            return Response({"error": "Bad Request Data"},
-                            status=status.HTTP_400_BAD_REQUEST)
-        except:
-            return Response({"error": "Uncaught internal server error."},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+# class SendFirebase(APIView):
+#     permission_classes = (permissions.AllowAny,)
+#
+#     def get(self, request, *args, **kwargs):
+#         tokens = UserProfile.objects.values_list('firebase_token')
+#         print(tokens[0])
+#         params = {}
+#         params['title'] = "Manchester United - Liverpool"
+#         params['body'] = "0 : 7"
+#         params['sound'] = "default"
+#
+#         values = {
+#             'content-available': True,
+#             'PATCHpriority': 'high',
+#             # 'to': '/topics/domestic_news',
+#             "registration_ids": [item[0] for item in tokens],
+#             'notification': params
+#         }
+#
+#         headers = {
+#             'Content-Type': 'application/json',
+#             'Authorization': 'key=' + config('FCM_API')
+#         }
+#         print(headers['Authorization'])
+#
+#         return Response(
+#             requests.post(url="https://fcm.googleapis.com/fcm/send", data=json.dumps(values), headers=headers),
+#             status=status.HTTP_200_OK)
+#
+#
+# class RegisterUserFirebaseTokenView(APIView):
+#     permission_classes = (permissions.IsAuthenticated,)
+#
+#     def patch(self, request, *args, **kwargs):
+#         try:
+#             user_id = self.kwargs.get('user_id')
+#             user = UserProfile.objects.get(user_id=user_id)
+#             user_serializer = UserTokenSerializer(user,
+#                                                   data=request.data)
+#             print(user_serializer)
+#             if user_serializer.is_valid():
+#                 user_serializer.save()
+#                 return Response({"User token successfully changed or added."},
+#                                 status=status.HTTP_200_OK)
+#             return Response({"error": "Bad Request Data"},
+#                             status=status.HTTP_400_BAD_REQUEST)
+#         except UserProfile.DoesNotExist:
+#             return Response({"error": "User with given ID not found."},
+#                             status=status.HTTP_404_NOT_FOUND)
+#         except KeyError:
+#             return Response({"error": "Bad Request Data"},
+#                             status=status.HTTP_400_BAD_REQUEST)
+#         except:
+#             return Response({"error": "Uncaught internal server error."},
+#                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class DomesticNewsView(APIView):
@@ -447,8 +440,8 @@ class DomesticNewsView(APIView):
     pagination_class = LimitOffsetPagination
 
     def get(self, request, *args, **kwargs):
-        # language = request.META.get('HTTP_LANGUAGE')
-        # language_activate(request, language)
+        language = request.META.get('HTTP_LANGUAGE')
+        language_activate(request, language)
         page = self.paginate_queryset(self.queryset)
         if len(page) > 0:
             serializer = self.serializer_class(page, many=True)

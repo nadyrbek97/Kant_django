@@ -35,7 +35,7 @@ class UserProfile(AbstractDateTimeModel):
 
     class Meta:
         verbose_name = "Пользователь"
-        verbose_name_plural = "Пользователи"
+        verbose_name_plural = "Профайлы пользователей"
 
     def __str__(self):
         return self.user.username + " id: " + str(self.user.id)
@@ -65,7 +65,7 @@ class DomesticNewsPhotoLink(models.Model):
 
     class Meta:
         verbose_name = "Фотография"
-        verbose_name_plural = "Фотографии"
+        verbose_name_plural = "Фотографии Местных новостей"
 
 
 # def send_firebase_message(sender, instance, created, *args, **kwargs):
