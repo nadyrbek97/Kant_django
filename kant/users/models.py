@@ -41,6 +41,17 @@ class UserProfile(AbstractDateTimeModel):
         return self.user.username + " id: " + str(self.user.id)
 
 
+class UserImageField(models.Model):
+    image = models.ImageField(upload_to='photos', null=True, blank=True,)
+    name = models.CharField(max_length=50, blank=True, null=True,)
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return self.name
+
+
 class DomesticNewsModel(AbstractDateTimeModel):
     name = models.CharField(max_length=500, null=True, verbose_name='Название')
     description = models.TextField(null=True, verbose_name='Описание')

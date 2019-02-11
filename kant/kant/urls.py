@@ -25,6 +25,7 @@ from rest_framework_jwt.views import (obtain_jwt_token,
 #                          )
 from rest_framework.routers import DefaultRouter
 from fcm_django.api.rest_framework import FCMDeviceViewSet, FCMDeviceAuthorizedViewSet
+from users.views import UserImageFieldView
 
 router = DefaultRouter()
 router.register(r'devices', FCMDeviceViewSet)
@@ -37,6 +38,7 @@ urlpatterns = [
     path('api/token-refresh', refresh_jwt_token, name="ApiTokenRefresh"),
     path('api/token-verify', verify_jwt_token, name='ApiTokenVerify'),
     path('api/user/', include('users.urls')),
+    path('api/image', UserImageFieldView.as_view(), name='image-view'),
     path('api/', include('parsing.urls')),
     path('api/', include('expenses.urls')),
     path('api/', include('services.urls')),

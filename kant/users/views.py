@@ -2,8 +2,9 @@ from urllib.request import urlopen, Request
 
 from rest_framework.pagination import LimitOffsetPagination
 
-from .models import UserProfile, DomesticNewsModel, DomesticNewsPhotoLink
+from .models import UserProfile, DomesticNewsModel, DomesticNewsPhotoLink, UserImageField
 from .serializers import (UserSignUpSerializer,
+                          UserImageFieldSerializer,
                           UserLoginSerializer,
                           UserPasswordChangeSerializer,
                           GetUserByIdSerializer,
@@ -109,6 +110,37 @@ class UserSignUpView(APIView):
             return Response({"error": KeyError}, status=status.HTTP_400_BAD_REQUEST)
 
 
+import base64
+from django.core.files.base import ContentFile
+
+
+class UserImageFieldView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request, *args, **kwargs):
+        try:
+            uimodel = UserImageField.objects.all()
+            serializer = UserImageFieldSerializer(uimodel, many=True)
+            return Response(serializer.data,
+                            status=status.HTTP_201_CREATED)
+        except:
+            return Response({"error": "Internal server error."},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def post(self, request, *args, **kwargs):
+
+        data = request.data
+        image = data['image']
+        img = ContentFile(base64.b64decode(str(image)), output='d')
+        res = {
+            'name': data['name'],
+            'image': img
+        }
+        serializer = UserImageFieldSerializer(data=res)
+        if serializer.is_valid():
+            serializer.save()
+        return Response({"error": serializer.errors},
+                        status=status.HTTP_400_BAD_REQUEST)
 # class UserSignUpView(generics.CreateAPIView):
 #     queryset = UserProfile.objects.all()
 #     serializer_class = UserSignUpSerializer

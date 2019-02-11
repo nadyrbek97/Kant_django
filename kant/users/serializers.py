@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework import exceptions
 from rest_framework.validators import UniqueValidator, ValidationError
-from .models import UserProfile
+from .models import UserProfile, UserImageField
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
@@ -120,3 +120,10 @@ class DomesticNewsPhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = DomesticNewsPhotoLink
         fields = ('photo_link',)
+
+
+class UserImageFieldSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserImageField
+        fields = ('id', 'image', 'name',)
