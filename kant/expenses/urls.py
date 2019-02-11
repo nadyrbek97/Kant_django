@@ -5,8 +5,8 @@ from .views import (ExpensesView,
                     SugarBeetPointView)
 
 urlpatterns = [
-    url(regex='^expenses(?:/(?P<field_id>[0-9]+))?/', view=ExpensesView.as_view(), name='expenses-view'),
-    path('field/<int:user_id>/', FieldsView.as_view(), name='fields-view'),
-    path('beet-point/', SugarBeetPointView.as_view(), name='sugar-beet-point-view'),
+    url(regex='^expenses(?:/(?P<field_id>[0-9]+))?', view=ExpensesView.as_view(), name='expenses-view'),
+    path('field/<int:user_id>', FieldsView.as_view(), name='fields-view'),
+    path('beet-point', SugarBeetPointView.as_view(), name='sugar-beet-point-view'),
 
 ]
