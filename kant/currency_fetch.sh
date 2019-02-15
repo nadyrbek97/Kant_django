@@ -1,1 +1,1 @@
-curl 127.0.0.1:8000/api/fetch-currency/
+curl 104.248.189.108:8002/api/fetch-currency/
