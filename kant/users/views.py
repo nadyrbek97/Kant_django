@@ -28,6 +28,8 @@ from parsing.methods import language_activate
 
 import json, traceback
 
+from decouple import config
+
 
 class UserSignUpView(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -75,7 +77,7 @@ class UserSignUpView(APIView):
                         "password": request.data['password']
                     })
 
-                    req = Request('http://127.0.0.1:8000/api/token-auth', bytes(dat, encoding="utf-8"),
+                    req = Request(config('HOST_URL')+ '/api/token-auth', bytes(dat, encoding="utf-8"),
                                   {'Content-Type': 'application/json'})
 
                     response_body = urlopen(req)
@@ -187,7 +189,7 @@ class UserLoginView(APIView):
             "password": password
         })
         try:
-            req = Request('http://127.0.0.1:8000/api/token-auth', bytes(dat, encoding="utf-8"),
+            req = Request(config('HOST_URL') + '/api/token-auth', bytes(dat, encoding="utf-8"),
                           {'Content-Type': 'application/json'})
             req.data
             response_body = urlopen(req)
