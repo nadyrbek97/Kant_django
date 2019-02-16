@@ -21,7 +21,7 @@ from rest_framework.validators import ValidationError
 
 from django.contrib.auth.models import User
 from django.contrib.auth import login as django_login, logout as django_logout, authenticate as django_authenticate
-
+from django.utils import translation
 from rest_framework.permissions import IsAuthenticated
 
 from parsing.methods import language_activate
@@ -143,38 +143,7 @@ class UserImageFieldView(APIView):
             serializer.save()
         return Response({"error": serializer.errors},
                         status=status.HTTP_400_BAD_REQUEST)
-# class UserSignUpView(generics.CreateAPIView):
-#     queryset = UserProfile.objects.all()
-#     serializer_class = UserSignUpSerializer
-#
-#     def post(self, request, *args, **kwargs):
-#         try:
-#             if request.data['password'] != request.data['password_repeat']:
-#                 msg = "password doesn't match"
-#                 raise exceptions.ValidationError(msg)
-#             user = User.objects.create(username=request.data['phone'],
-#                                        email=request.data['email'])
-#             serialized = self.get_serializer(data=request.data)
-#             print(serialized)
-#             if serialized.is_valid():
-#
-#                 user.set_password(serialized.data["password"])
-#                 user.save()
-#                 UserProfile.objects.create(
-#                     user=user,
-#                     phone=request.data['phone'],
-#                     email=request.data['email'],
-#                     first_name=request.data['first_name'],
-#                     last_name=request.data['last_name'],
-#                     fathers_name=request.data['fathers_name'],
-#                     date_of_birth=request.data['date_of_birth'],
-#                     address=request.data['address'],
-#                     photo=request.data['photo']
-#                 )
-#                 msg = 'Successfully added. '
-#                 return Response(data=msg, status=status.HTTP_201_CREATED)
-#         except KeyError:
-#             return Response({"error": "Some error message"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class UserLoginView(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -215,24 +184,6 @@ class UserLoginView(APIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
 
-# class UserLoginView(APIView):
-#     permission_classes = (permissions.AllowAny, )
-#
-#     def post(self, request):
-#         try:
-#             serializer = UserLoginSerializer(data=request.data)
-#             serializer.is_valid(raise_exception=True)
-#             user = serializer.validated_data['user']
-#             django_login(request, user)
-#             token, created = Token.objects.get_or_create(user=user)
-#             context = {}
-#             context['user_id'] = user.id
-#             context['token'] = token.key
-#             return Response(context, status=status.HTTP_200_OK)
-#         except KeyError:
-#             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-
-
 class UserLogoutView(APIView):
     authentication_classes = (TokenAuthentication, )
 
@@ -271,59 +222,11 @@ class UserChangePasswordView(generics.UpdateAPIView):
                                 status=status.HTTP_400_BAD_REQUEST)
             self.object.set_password(serializer.data.get("new_password"))
             self.object.save()
-            # if request.session[translation.LANGUAGE_SESSION_KEY] == 'kg':
-            #     return Response("Паролингыз озгорду", status=status.HTTP_200_OK)
+            if request.session[translation.LANGUAGE_SESSION_KEY] == 'kg':
+                return Response("Паролингыз озгорду", status=status.HTTP_200_OK)
             return Response("Ваш пароль был успешно изменён")
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# class ForgotPasswordView(APIView):
-#     serializer_class = ForgotPasswordSerializer
-#     model = User
-#     permission_classes = (permissions.AllowAny,)
-#
-#     def get_user(self, request):
-#         phone_number = request.data['phone_number']
-#         user = User.objects.get(username=phone_number)
-#         return user
-#
-#     def post(self, request, *args, **kwargs):
-#         self.object = self.get_user(request)
-#         if self.object is not None:
-#             from .sms_send import send_twilio_sms
-#             send_twilio_sms(request.data['phone_number'])
-#             return Response({"success": "sms sent"}, status=status.HTTP_200_OK)
-#         return Response({"error": "error"}, status=status.HTTP_400_BAD_REQUEST)
-
-
-# class UserChangePasswordView(generics.UpdateAPIView):
-#     permission_classes = (IsAuthenticated,)
-#     # authentication_classes = (BearerTokenAuthentication,)
-#     serializer_class = UserPasswordChangeSerializer
-#
-#     def get_object(self, queryset=None):
-#         obj = self.request.user
-#         return obj
-#
-#     def update(self, request, *args, **kwargs):
-#         self.object = self.get_object()
-#         print()
-#         serializer = self.get_serializer(data=request.data)
-#
-#         if serializer.is_valid():
-#             if serializer.data.get("new_password") == serializer.data.get("new_password_repeat"):
-#                 msg = " New passwords don't match "
-#                 raise exceptions.ValidationError(msg)
-#             # Check old password
-#             if not self.object.check_password(serializer.data.get("old_password")):
-#                 return Response({"old_password": ["Wrong password."]}, status=400)
-#             # set_password also hashes the password that the user will get
-#             self.object.set_password(serializer.data.get("new_password"))
-#             self.object.save()
-#             return Response("Success.", status=200)
-#
-#         return Response(serializer.errors, status=400)
 
 
 class BearerAuthentication(TokenAuthentication):
@@ -341,7 +244,6 @@ class Test(APIView):
 
 class GetUserByIdView(APIView):
     permission_classes = (IsAuthenticated, )
-    # authentication_classes = (BearerAuthentication, )
 
     def get(self, request, *args, **kwargs):
 
