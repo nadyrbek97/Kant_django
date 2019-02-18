@@ -79,7 +79,7 @@ class SupplierContactsInline(admin.TabularInline):
 class SupplierAdmin(admin.ModelAdmin):
     # exclude = ('name', 'description',)
     inlines = [SupplierBranchInline, SupplierContactsInline, SupplierImagesInline, ]
-    # Supplier admin register with its Branches, Images, Contacts
+    #  Supplier admin register with its Branches, Images, Contacts
 
 
 @admin.register(Services)
