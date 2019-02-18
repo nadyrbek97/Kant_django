@@ -43,5 +43,5 @@ urlpatterns = [
     path('api/', include('expenses.urls')),
     path('api/', include('services.urls')),
     path('firebase/', include(router.urls)),
-    url(regex='^user/register-token/(?P<user_id>[0-9]+)', view=include(router.urls))
+    url(regex='^api/user/register-token/(?P<user_id>[0-9]+)', view=include(router.urls))
 ]
