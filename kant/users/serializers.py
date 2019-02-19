@@ -6,7 +6,8 @@ from .models import UserProfile, UserImageField
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from .models import (DomesticNewsModel,
-                     DomesticNewsPhotoLink)
+                     DomesticNewsPhotoLink,
+                     UserProfile)
 
 
 class UserSignUpSerializer(serializers.ModelSerializer):
@@ -70,6 +71,14 @@ class UserLoginSerializer(serializers.Serializer):
             raise exceptions.ValidationError(msg)
 
         return data
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserProfile
+        fields = ('first_name', 'last_name', 'fathers_name', 'email',
+                  'date_of_birth', 'phone', 'city', 'address', 'photo',)
 
 
 class ForgotPasswordSerializer(serializers.Serializer):

@@ -8,6 +8,7 @@ from .serializers import (UserSignUpSerializer,
                           UserLoginSerializer,
                           UserPasswordChangeSerializer,
                           GetUserByIdSerializer,
+                          UserProfileSerializer,
                           UpdateUserByIdSerializer,
                           UserTokenSerializer,
                           ForgotPasswordSerializer, DomesticNewsModelSerializer, DomesticNewsPhotoSerializer)
@@ -112,6 +113,58 @@ class UserSignUpView(APIView):
             return Response({"error": KeyError}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UserView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        language = request.META.get('HTTP_LANGUAGE')
+        language_activate(request, language)
+        try:
+            user_id = self.kwargs.get('user_id')
+            user = UserProfile.objects.get(user_id=user_id, )
+            user_serializer = UserProfileSerializer(user, many=False, )
+            return Response(user_serializer.data,
+                            status=status.HTTP_200_OK)
+        except UserProfile.DoesNotExist:
+            return Response({"error": "User with given ID not found."},
+                            status=status.HTTP_404_NOT_FOUND)
+        except KeyError:
+            return Response({"error": "User ID key error occured. Please enter valid user ID"},
+                            status=status.HTTP_400_BAD_REQUEST)
+        except AttributeError:
+            return Response({"error": "User ID error. Invalid user ID."},
+                            status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({"error": "Uncaught internal server error."},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def patch(self, request, *args, **kwargs):
+        try:
+            user_id = self.kwargs.get('user_id')
+            user = UserProfile.objects.get(user_id=user_id)
+            user_serializer = UserProfileSerializer(user,
+                                                    data=request.data, partial=True)
+            if user_serializer.is_valid():
+                user_serializer.save()
+                return Response(user_serializer.data,
+                                status=status.HTTP_202_ACCEPTED)
+            return Response({"error": "Bad request data."},
+                            status=status.HTTP_400_BAD_REQUEST)
+        except UserProfile.DoesNotExist:
+            return Response({"error": "User with given ID not found."},
+                            status=status.HTTP_404_NOT_FOUND)
+        except KeyError:
+            return Response({"error": "User ID key error occured. Please enter valid user ID"},
+                            status=status.HTTP_400_BAD_REQUEST)
+        except AttributeError:
+            return Response({"error": "User ID error. Invalid user ID."},
+                            status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({"error": "Uncaught internal server error."},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
 import base64
 from django.core.files.base import ContentFile
 
@@ -133,7 +186,7 @@ class UserImageFieldView(APIView):
 
         data = request.data
         image = data['image']
-        img = ContentFile(base64.b64decode(str(image)), output='d')
+        img = ContentFile(base64.b64decode(str(image)))
         res = {
             'name': data['name'],
             'image': img
