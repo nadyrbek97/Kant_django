@@ -30,7 +30,7 @@ class UserProfile(AbstractDateTimeModel):
         size=6, max_length=(6 * 31), null=True, blank=True)
     address = models.CharField("Адрес", max_length=50, null=False)
     city = models.CharField("Город", max_length=50, null=True, blank=True)
-    photo = models.CharField("Фото пользователя", max_length=1000, null=True, blank=True)
+    photo = models.CharField("Фото пользователя", max_length=1000000, null=True, blank=True)
     firebase_token = models.CharField(max_length=500, null=True, blank=True)
 
     class Meta:
