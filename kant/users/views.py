@@ -403,7 +403,8 @@ class RegisterUserFirebaseTokenView(APIView):
 
     def patch(self, request, *args, **kwargs):
         try:
-            fb_token = request.data['firebase_token']
+            print(request.data)
+            fb_token = request.data['registration_id']
 
             FCMDevice.objects.create(registration_id=fb_token)
 
