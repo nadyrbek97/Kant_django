@@ -395,31 +395,37 @@ class GetUserByIdView(APIView):
 #             status=status.HTTP_200_OK)
 #
 #
-# class RegisterUserFirebaseTokenView(APIView):
-#     permission_classes = (permissions.IsAuthenticated,)
-#
-#     def patch(self, request, *args, **kwargs):
-#         try:
-#             user_id = self.kwargs.get('user_id')
-#             user = UserProfile.objects.get(user_id=user_id)
-#             user_serializer = UserTokenSerializer(user,
-#                                                   data=request.data)
-#             print(user_serializer)
-#             if user_serializer.is_valid():
-#                 user_serializer.save()
-#                 return Response({"User token successfully changed or added."},
-#                                 status=status.HTTP_200_OK)
-#             return Response({"error": "Bad Request Data"},
-#                             status=status.HTTP_400_BAD_REQUEST)
-#         except UserProfile.DoesNotExist:
-#             return Response({"error": "User with given ID not found."},
-#                             status=status.HTTP_404_NOT_FOUND)
-#         except KeyError:
-#             return Response({"error": "Bad Request Data"},
-#                             status=status.HTTP_400_BAD_REQUEST)
-#         except:
-#             return Response({"error": "Uncaught internal server error."},
-#                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+from fcm_django.models import FCMDevice
+
+
+class RegisterUserFirebaseTokenView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def patch(self, request, *args, **kwargs):
+        try:
+            user_id = self.kwargs.get('user_id')
+            user = UserProfile.objects.get(user_id=user_id)
+            user_serializer = UserTokenSerializer(user,
+                                                     data=request.data)
+            print(user_serializer)
+            if user_serializer.is_valid():
+                user_serializer.save()
+                user = UserProfile.objects.get(user_id=user_id)
+                FCMDevice.objects.create(registration_id=user.firebase_token)
+
+                return Response({"User token successfully changed or added."},
+                                status=status.HTTP_200_OK)
+            return Response({"error": "Bad Request Data"},
+                            status=status.HTTP_400_BAD_REQUEST)
+        except UserProfile.DoesNotExist:
+            return Response({"error": "User with given ID not found."},
+                            status=status.HTTP_404_NOT_FOUND)
+        except KeyError:
+            return Response({"error": "Bad Request Data"},
+                            status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({"error": "Uncaught internal server error."},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class DomesticNewsView(APIView):
