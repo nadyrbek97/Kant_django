@@ -403,23 +403,12 @@ class RegisterUserFirebaseTokenView(APIView):
 
     def patch(self, request, *args, **kwargs):
         try:
-            user_id = self.kwargs.get('user_id')
-            user = UserProfile.objects.get(user_id=user_id)
-            user_serializer = UserTokenSerializer(user,
-                                                     data=request.data)
-            print(user_serializer)
-            if user_serializer.is_valid():
-                user_serializer.save()
-                user = UserProfile.objects.get(user_id=user_id)
-                FCMDevice.objects.create(registration_id=user.firebase_token)
+            fb_token = request.data['firebase_token']
 
-                return Response({"User token successfully changed or added."},
+            FCMDevice.objects.create(registration_id=fb_token)
+
+            return Response({"User token successfully changed or added."},
                                 status=status.HTTP_200_OK)
-            return Response({"error": "Bad Request Data"},
-                            status=status.HTTP_400_BAD_REQUEST)
-        except UserProfile.DoesNotExist:
-            return Response({"error": "User with given ID not found."},
-                            status=status.HTTP_404_NOT_FOUND)
         except KeyError:
             return Response({"error": "Bad Request Data"},
                             status=status.HTTP_400_BAD_REQUEST)
