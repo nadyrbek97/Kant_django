@@ -49,7 +49,7 @@ class BankContactsInline(admin.TabularInline):
 @admin.register(BankModel)
 class BankAdmin(admin.ModelAdmin):
     list_filter = ('service',)
-    exclude = ('name', 'description',)
+    # exclude = ('name', 'description',)
     inlines = [BankBranchInline, BankContactsInline, BankImagesInline, ]
     # Bank admin register with its Branches, Images, Contacts
 
@@ -86,6 +86,7 @@ class SupplierAdmin(admin.ModelAdmin):
 class ServicesAdmin(admin.ModelAdmin):
     # exclude = ('name',)
     pass
+
 
 @admin.register(Suppliers)
 class SuppliersAdmin(admin.ModelAdmin):
