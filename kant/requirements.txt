@@ -5,7 +5,7 @@ certifi==2018.11.29
 cffi==1.11.5
 chardet==3.0.4
 cryptography==2.5
-Django==2.1.5
+Django==2.1.11
 django-modeltranslation==0.12.2
 django-push-notifications==1.6.0
 django-suit==0.2.26
