@@ -19,7 +19,7 @@ http-ece==1.0.5
 hyper==0.7.0
 hyperframe==3.2.0
 idna==2.8
-lxml==4.3.0
+lxml==4.6.5
 Pillow==5.4.1
 psycopg2==2.7.7
 py-vapid==1.4.0
